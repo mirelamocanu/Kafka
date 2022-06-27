@@ -1,0 +1,9 @@
+{
+  "id": "1",
+  "paymentState": "New",
+  "timestamp": "2022-06-24T16:39:27.368719200",
+  "amount": 800.000,
+  "currency": "USD",
+  "creditorCountry": "Spain",
+  "debitorCountry": "United Kingdom"
+}
