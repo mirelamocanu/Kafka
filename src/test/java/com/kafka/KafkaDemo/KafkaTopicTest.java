@@ -11,9 +11,6 @@ import utils.JsonMapper;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.kafka.KafkaDemo.TestDataProducer.countries;
-import static com.kafka.KafkaDemo.TestDataProducer.currencies;
-
 @Slf4j
 public class KafkaTopicTest extends BaseTest {
     Payment payment;
@@ -21,13 +18,13 @@ public class KafkaTopicTest extends BaseTest {
     @BeforeEach
     public void setupPayment() {
         payment = JsonMapper.getPaymentFromFile("src/test/resources/payment.json");
-        payment.setId(testDataProducer.generateUniqueId());
+        payment.setId(testDataGenerator.generateUniqueId());
     }
 
     @Test
     void testSendMessage() {
         payment.setTimestamp(LocalDateTime.now().toString());
-        generatePaymentValues(payment);
+        TestDataGenerator.generatePaymentValues(payment);
 
         log.info("Sending message: {}", payment);
         publishMessage(pendingPayments, payment);
@@ -36,17 +33,18 @@ public class KafkaTopicTest extends BaseTest {
         Assertions.assertTrue(processedPaymentFromTopic.isPresent());
 
         Payment paymentFromTopic = processedPaymentFromTopic.get();
-        log.info("Reading from [{}] message {}",pendingPayments,paymentFromTopic);
+        log.info("Reading from [{}] message {}", pendingPayments, paymentFromTopic);
         Assertions.assertEquals(payment.getId(), paymentFromTopic.getId());
 
-        //checker methods and Assertions
+        //checker methods and Assertions according to service specs
+        checkMappingInToOutMessage(payment, paymentFromTopic);
 
     }
 
     @RepeatedTest(5)
     void testPublishMessage() {
         payment.setTimestamp(LocalDateTime.now().toString());
-        generatePaymentValues(payment);
+        TestDataGenerator.generatePaymentValues(payment);
 
         log.info("Sending message: {}", payment);
         publishMessage(pendingPayments, payment);
@@ -55,17 +53,11 @@ public class KafkaTopicTest extends BaseTest {
         Assertions.assertTrue(processedPaymentFromTopic.isPresent());
 
         Payment paymentFromTopic = processedPaymentFromTopic.get();
-        log.info("Reading from [{}] message {}",pendingPayments,paymentFromTopic);
+        log.info("Reading from [{}] message {}", pendingPayments, paymentFromTopic);
         Assertions.assertEquals(payment.getId(), paymentFromTopic.getId());
 
-        //checker methods and Assertions
-
+        //checker methods and Assertions according to service specs
+        checkMappingInToOutMessage(payment, paymentFromTopic);
     }
 
-    private void generatePaymentValues(Payment payment) {
-        payment.setAmount(testDataProducer.generateAmount());
-        payment.setCurrency(testDataProducer.pickRandom(currencies));
-        payment.setCreditorCountry(testDataProducer.pickRandom(countries));
-        payment.setDebitorCountry(testDataProducer.pickRandom(countries));
-    }
 }
