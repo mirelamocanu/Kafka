@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
+import utils.JsonMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +36,9 @@ class BaseTest {
 
     protected Optional<Payment> getPaymentFromTopic(String id, List<Payment> topicList) {
         await().atMost(5, TimeUnit.SECONDS).until(() -> topicList.stream()
-                .anyMatch(payment -> id.equals(payment.getId())));
+                .anyMatch(payment -> payment.getId().equals(id)));
         return topicList.stream()
-                .filter(payment -> id.equals(payment.getId()))
+                .filter(payment -> payment.getId().equals(id))
                 .findFirst();
     }
 

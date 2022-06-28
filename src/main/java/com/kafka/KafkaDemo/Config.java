@@ -34,7 +34,7 @@ public class Config {
     }
 
     @Bean
-    public KafkaTemplate<String, Payment> personKafkaTemplate() {
+    public KafkaTemplate<String, Payment> paymentKafkaTemplate() {
         return new KafkaTemplate<>(specificRecordProducer());
     }
 

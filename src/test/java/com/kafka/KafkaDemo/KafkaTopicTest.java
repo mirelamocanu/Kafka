@@ -36,7 +36,8 @@ public class KafkaTopicTest extends BaseTest {
         Assertions.assertTrue(processedPaymentFromTopic.isPresent());
 
         Payment paymentFromTopic = processedPaymentFromTopic.get();
-        Assertions.assertEquals(paymentFromTopic.getId(), paymentFromTopic.getId());
+        log.info("Reading from [{}] message {}",pendingPayments,paymentFromTopic);
+        Assertions.assertEquals(payment.getId(), paymentFromTopic.getId());
 
         //checker methods and Assertions
 
@@ -48,13 +49,14 @@ public class KafkaTopicTest extends BaseTest {
         generatePaymentValues(payment);
 
         log.info("Sending message: {}", payment);
-//        publishMessage(pendingPayments, payment);
-//
-//        Optional<Payment> processedPaymentFromTopic = getPaymentFromTopic(payment.getId(), paymentList);
-//        Assertions.assertTrue(processedPaymentFromTopic.isPresent());
-//
-//        Payment paymentFromTopic = processedPaymentFromTopic.get();
-//        Assertions.assertEquals(paymentFromTopic.getId(), paymentFromTopic.getId());
+        publishMessage(pendingPayments, payment);
+
+        Optional<Payment> processedPaymentFromTopic = getPaymentFromTopic(payment.getId(), paymentList);
+        Assertions.assertTrue(processedPaymentFromTopic.isPresent());
+
+        Payment paymentFromTopic = processedPaymentFromTopic.get();
+        log.info("Reading from [{}] message {}",pendingPayments,paymentFromTopic);
+        Assertions.assertEquals(payment.getId(), paymentFromTopic.getId());
 
         //checker methods and Assertions
 

@@ -27,8 +27,8 @@ public class TestDataProducer {
                 ? stringList.get(0)
                 : stringList.get(new Random().ints(0, stringList.size()).findFirst().getAsInt());
     }
-    public BigDecimal generateAmount (){
+    public String generateAmount (){
         double amount = new Random().ints(0, 99).findFirst().getAsInt() * 10008.46;
-        return BigDecimal.valueOf(amount);
+        return BigDecimal.valueOf(amount).toString();
     }
 }
